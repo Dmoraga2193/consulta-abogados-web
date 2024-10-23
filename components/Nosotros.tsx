@@ -13,7 +13,7 @@ const FlipCard: React.FC<FlipCardProps> = ({ frontText, backImage }) => {
 
   return (
     <motion.div
-      className="w-64 h-64 relative overflow-hidden rounded-2xl shadow-md cursor-pointer bg-card"
+      className="w-64 h-64 relative overflow-hidden rounded-lg shadow-md cursor-pointer bg-card"
       onHoverStart={() => setIsHovered(true)}
       onHoverEnd={() => setIsHovered(false)}
     >
@@ -22,7 +22,7 @@ const FlipCard: React.FC<FlipCardProps> = ({ frontText, backImage }) => {
         animate={{ opacity: isHovered ? 0 : 1 }}
         transition={{ duration: 0.3 }}
       >
-        <p className="text-xl font-bold text-muted-foreground text-center ">
+        <p className="text-xl font-bold text-card-foreground text-center">
           {frontText}
         </p>
       </motion.div>
@@ -67,11 +67,11 @@ export default function Nosotros() {
   ];
 
   return (
-    <section className="flex flex-col items-center py-12 bg-background min-h-screen">
+    <section className="flex flex-col items-center py-8 bg-background">
       <h2 className="text-4xl font-bold text-foreground mb-12">
         Por qué confiar en nosotros
       </h2>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-8 ">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6">
         {items.map((item, index) => (
           <FlipCard
             key={index}

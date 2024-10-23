@@ -3,6 +3,7 @@ import Footer from "@/components/Footer";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/ThemeProvider";
+import Chatbot from "@/components/ChatBot";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -28,6 +29,7 @@ export default function RootLayout({
           <div className="flex flex-col min-h-screen">
             <Header />
             {children}
+            <Chatbot />
             <Footer />
           </div>
         </ThemeProvider>
