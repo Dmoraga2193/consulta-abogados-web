@@ -216,6 +216,7 @@ export default function StructuredChatbot() {
   }>({});
   const [totalPrice, setTotalPrice] = useState(0);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const steps = ["category", "topic", "question", "summary"];
 
   const resetChat = () => {
     setCurrentStep("category");
@@ -316,10 +317,10 @@ export default function StructuredChatbot() {
                       variant="ghost"
                       size="icon"
                       onClick={handleBack}
-                      className="rounded-full w-8 h-8 bg-transparent hover:bg-primary-foreground/20 transition-colors duration-200"
+                      className="mr-2 text-primary-foreground hover:text-primary-foreground/90"
                     >
                       <ArrowLeft className="w-5 h-5" />
-                      <span className="sr-only  ">Volver</span>
+                      <span className="sr-only">Volver</span>
                     </Button>
                   )}
                   Cotizador Legal
@@ -333,6 +334,21 @@ export default function StructuredChatbot() {
                     <span className="sr-only">Cerrar chat</span>
                   </Button>
                 </CardTitle>
+                <div className="flex justify-center space-x-2 mt-2">
+                  {steps.map((step, index) => (
+                    <motion.div
+                      key={step}
+                      className={`w-2 h-2 rounded-full ${
+                        index <= steps.indexOf(currentStep)
+                          ? "bg-primary-foreground"
+                          : "bg-primary-foreground/20"
+                      }`}
+                      initial={{ scale: 0 }}
+                      animate={{ scale: 1 }}
+                      transition={{ delay: index * 0.1 }}
+                    />
+                  ))}
+                </div>
               </CardHeader>
               <CardContent className="p-0">
                 <ScrollArea className="h-[calc(32rem-8rem)] w-full">
