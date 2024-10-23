@@ -43,7 +43,7 @@ const servicios = [
 
 export default function ServiciosDestacados() {
   return (
-    <section className="py-20 bg-background">
+    <section className="py-20 bg-background" id="servicios">
       <div className="container mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
         <motion.h2
           className="text-4xl font-bold text-center mb-12 text-foreground"

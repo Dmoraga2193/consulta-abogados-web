@@ -5,7 +5,10 @@ import { motion } from "framer-motion";
 
 export default function Hero() {
   return (
-    <section className="bg-gradient-to-br from-primary/20 via-secondary/40 to-accent/20 py-20 overflow-hidden relative">
+    <section
+      className="bg-gradient-to-br from-primary/20 via-secondary/40 to-accent/20 py-20 overflow-hidden relative"
+      id="inicio"
+    >
       <motion.div
         className="absolute inset-0 z-0"
         initial={{ opacity: 0 }}

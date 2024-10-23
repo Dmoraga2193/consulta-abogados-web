@@ -7,7 +7,7 @@ import { ThemeProvider } from "@/components/ThemeProvider";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata = {
-  title: "LegalChile",
+  title: "Consultas Legales",
   description: "Servicios legales integrales, innovadores y cercanos",
 };
 

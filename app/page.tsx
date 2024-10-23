@@ -1,8 +1,7 @@
 import Hero from "@/components/Hero";
 import ProductosPyme from "@/components/ProductosPyme";
 import ServiciosDestacados from "@/components/ServiciosDestacados";
-import PorQueConfiar from "@/components/PorQueConfiar";
-
+import Nosotros from "@/components/Nosotros";
 import Contacto from "@/components/Contacto";
 
 export default function Home() {
@@ -11,7 +10,7 @@ export default function Home() {
       <Hero />
       <ProductosPyme />
       <ServiciosDestacados />
-      <PorQueConfiar />
+      <Nosotros />
       <Contacto />
     </main>
   );

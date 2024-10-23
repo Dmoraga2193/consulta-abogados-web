@@ -3,20 +3,23 @@
 import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { useTheme } from "next-themes";
+import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import {
-  PhoneIcon,
-  MenuIcon,
-  Sun,
-  Moon,
-  Home,
-  Users,
-  ShoppingBag,
-  FileText,
-  Mail,
-} from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
-import { useTheme } from "next-themes";
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Home, Users, ShoppingBag, Mail, Sun, Moon, Menu } from "lucide-react";
+
+const navItems = [
+  { name: "Inicio", icon: Home, href: "#inicio" },
+  { name: "Servicios", icon: ShoppingBag, href: "#servicios" },
+  { name: "Nosotros", icon: Users, href: "#nosotros" },
+  { name: "Contacto", icon: Mail, href: "#contacto" },
+];
 
 export default function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -30,14 +33,6 @@ export default function Header() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const navItems = [
-    { name: "Inicio", icon: Home },
-    { name: "Nosotros", icon: Users },
-    { name: "Productos", icon: ShoppingBag },
-    { name: "Blog", icon: FileText },
-    { name: "Contacto", icon: Mail },
-  ];
-
   return (
     <motion.header
       className={`fixed w-full z-50 transition-all duration-300 ${
@@ -49,79 +44,63 @@ export default function Header() {
       animate={{ y: 0 }}
       transition={{ duration: 0.5 }}
     >
-      <div className="container mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
-        <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-          <Image
-            src="/assets/images/adaptive-icon.png"
-            alt="Logo"
-            width={85}
-            height={85}
-            priority
-            className="rounded-full"
-          />
-        </motion.div>
-        <nav className="hidden md:flex space-x-8">
-          {navItems.map((item) => (
-            <motion.div
-              key={item.name}
-              whileHover={{ y: -2 }}
-              className="group"
-            >
+      <div className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div className="flex justify-between items-center py-3">
+          <Link href="/" className="flex items-center space-x-2">
+            <Image
+              src="/assets/images/adaptive-icon.png"
+              alt="Logo"
+              width={55}
+              height={55}
+              className="rounded-full"
+            />
+            <span className="font-bold text-lg">ConsultasLegales</span>
+          </Link>
+          <nav className="hidden md:flex space-x-6">
+            {navItems.map((item) => (
               <Link
+                key={item.name}
                 href="#"
-                className="text-muted-foreground hover:text-primary transition-colors flex flex-col items-center"
+                className="text-muted-foreground hover:text-primary transition-colors flex items-center space-x-1 text-sm"
               >
-                <motion.div
-                  whileHover={{ rotate: 360 }}
-                  transition={{ duration: 0.3 }}
-                >
-                  <item.icon className="h-5 w-5 mb-1 group-hover:text-primary" />
-                </motion.div>
-                <span className="text-xs">{item.name}</span>
+                <item.icon className="h-4 w-4" />
+                <span>{item.name}</span>
               </Link>
-            </motion.div>
-          ))}
-        </nav>
-        <div className="flex items-center space-x-4">
-          <motion.div
-            className="hidden md:flex items-center space-x-2"
-            whileHover={{ scale: 1.05 }}
-          >
-            <PhoneIcon className="text-primary" size={18} />
-            <span className="text-sm text-foreground">22 3210000</span>
-          </motion.div>
-          <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-            <Button variant="outline" className="hidden md:inline-flex">
-              Iniciar sesión
-            </Button>
-          </motion.div>
-          <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-            <Button>Cotizar ahora</Button>
-          </motion.div>
-          <AnimatePresence mode="wait" initial={false}>
-            <motion.div
-              key={theme}
-              initial={{ rotate: -180, opacity: 0 }}
-              animate={{ rotate: 0, opacity: 1 }}
-              exit={{ rotate: 180, opacity: 0 }}
-              transition={{ duration: 0.3 }}
-            >
-              <Button
-                variant="ghost"
-                size="icon"
+            ))}
+          </nav>
+          <div className="flex items-center space-x-3">
+            {mounted && (
+              <button
                 onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+                className="w-12 h-6 rounded-full bg-gray-200 dark:bg-gray-600 relative transition-colors duration-500 ease-in focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
               >
-                {mounted && theme === "dark" ? <Sun /> : <Moon />}
-              </Button>
-            </motion.div>
-          </AnimatePresence>
-          <motion.div
-            className="md:hidden"
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-          >
-            <MenuIcon className="text-foreground" size={24} />
-          </motion.div>
+                <div className="flex items-center justify-between p-1">
+                  <Sun className="h-4 w-4 text-yellow-500" />
+                  <Moon className="h-4 w-4 text-blue-500" />
+                </div>
+                <div
+                  className={`absolute top-0.5 left-0.5 bg-white w-5 h-5 rounded-full transition-transform duration-500 ease-in-out ${
+                    theme === "dark" ? "transform translate-x-6" : ""
+                  }`}
+                />
+              </button>
+            )}
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" size="icon" className="md:hidden">
+                  <Menu className="h-5 w-5" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                {navItems.map((item) => (
+                  <DropdownMenuItem key={item.name}>
+                    <item.icon className="h-4 w-4 mr-2" />
+                    <span>{item.name}</span>
+                  </DropdownMenuItem>
+                ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
         </div>
       </div>
     </motion.header>

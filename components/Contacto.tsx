@@ -10,7 +10,10 @@ import Image from "next/image";
 
 export default function Contacto() {
   return (
-    <section className="py-20 bg-gradient-to-r from-primary/10 to-secondary/10 relative overflow-hidden min-h-screen flex items-center">
+    <section
+      className="py-20 bg-gradient-to-r from-primary/10 to-secondary/10 relative overflow-hidden min-h-screen flex items-center"
+      id="contacto"
+    >
       <motion.div
         className="absolute inset-0 z-0"
         animate={{
