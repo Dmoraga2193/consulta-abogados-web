@@ -19,7 +19,7 @@ import {
 } from "@/components/ui/accordion";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
-import { ChevronRight, MessageCircle, X } from "lucide-react";
+import { ChevronRight, MessageCircle, X, ArrowLeft } from "lucide-react";
 
 type ChatItem = {
   id: string;
@@ -256,6 +256,25 @@ export default function StructuredChatbot() {
     setCurrentStep("summary");
   };
 
+  const handleBack = () => {
+    switch (currentStep) {
+      case "topic":
+        setCurrentStep("category");
+        setSelectedCategory(null);
+        setTotalPrice(0);
+        break;
+      case "question":
+        setCurrentStep("topic");
+        setSelectedTopic(null);
+        break;
+      case "summary":
+        setCurrentStep("question");
+        break;
+      default:
+        break;
+    }
+  };
+
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [currentStep, selectedAnswers]);
@@ -283,22 +302,34 @@ export default function StructuredChatbot() {
       <AnimatePresence>
         {isOpen && (
           <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.95 }}
+            initial={{ opacity: 0, scale: 0.95, y: 20 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.95, y: 20 }}
             transition={{ duration: 0.3 }}
+            className="absolute bottom-0 right-0"
           >
             <Card className="w-96 h-[32rem] shadow-xl overflow-hidden">
               <CardHeader className="p-4 bg-primary text-primary-foreground">
                 <CardTitle className="text-lg flex justify-between items-center">
+                  {currentStep !== "category" && (
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      onClick={handleBack}
+                      className="mr-2 text-primary-foreground hover:text-primary-foreground/90"
+                    >
+                      <ArrowLeft className="w-5 h-5" />
+                      <span className="sr-only">Volver</span>
+                    </Button>
+                  )}
                   Cotizador Legal
                   <Button
                     variant="ghost"
                     size="icon"
                     onClick={() => setIsOpen(false)}
-                    className="text-primary-foreground hover:text-primary-foreground/90"
+                    className="rounded-full w-8 h-8 bg-transparent hover:bg-primary-foreground/20 transition-colors duration-200"
                   >
-                    <X className="w-6 h-6" />
+                    <X className="w-5 h-5" />
                     <span className="sr-only">Cerrar chat</span>
                   </Button>
                 </CardTitle>
@@ -312,16 +343,29 @@ export default function StructuredChatbot() {
                           <h3 className="text-lg font-semibold mb-4">
                             Seleccione el área legal de su consulta:
                           </h3>
-                          {categories.map((category) => (
-                            <Button
-                              key={category.id}
-                              onClick={() => handleCategorySelect(category)}
-                              className="w-full mb-2 justify-between group hover:bg-primary/90 transition-colors duration-200"
-                            >
-                              {category.text}
-                              <ChevronRight className="w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity duration-200" />
-                            </Button>
-                          ))}
+                          <div className="grid grid-cols-2 gap-2">
+                            {categories.map((category) => (
+                              <motion.div
+                                key={category.id}
+                                whileHover={{ scale: 1.05 }}
+                                whileTap={{ scale: 0.95 }}
+                              >
+                                <Button
+                                  onClick={() => handleCategorySelect(category)}
+                                  className="w-full h-full py-4 px-2 flex flex-col items-center justify-center text-center"
+                                  variant="outline"
+                                >
+                                  <span className="text-lg mb-2">
+                                    {category.text}
+                                  </span>
+                                  <span className="text-sm text-muted-foreground">
+                                    Desde $
+                                    {category.basePrice.toLocaleString("es-CL")}
+                                  </span>
+                                </Button>
+                              </motion.div>
+                            ))}
+                          </div>
                         </motion.div>
                       )}
                       {currentStep === "topic" && selectedCategory && (
@@ -330,16 +374,24 @@ export default function StructuredChatbot() {
                             Seleccione el tema específico de{" "}
                             {selectedCategory.text}:
                           </h3>
-                          {selectedCategory.topics.map((topic) => (
-                            <Button
-                              key={topic.id}
-                              onClick={() => handleTopicSelect(topic)}
-                              className="w-full mb-2 justify-between group hover:bg-primary/90 transition-colors duration-200"
-                            >
-                              {topic.text}
-                              <ChevronRight className="w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity duration-200" />
-                            </Button>
-                          ))}
+                          <div className="space-y-2">
+                            {selectedCategory.topics.map((topic) => (
+                              <motion.div
+                                key={topic.id}
+                                whileHover={{ scale: 1.02 }}
+                                whileTap={{ scale: 0.98 }}
+                              >
+                                <Button
+                                  onClick={() => handleTopicSelect(topic)}
+                                  className="w-full justify-between group hover:bg-primary/90 transition-colors duration-200"
+                                  variant="outline"
+                                >
+                                  {topic.text}
+                                  <ChevronRight className="w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity duration-200" />
+                                </Button>
+                              </motion.div>
+                            ))}
+                          </div>
                         </motion.div>
                       )}
                       {currentStep === "question" && selectedTopic && (
