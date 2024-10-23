@@ -316,10 +316,10 @@ export default function StructuredChatbot() {
                       variant="ghost"
                       size="icon"
                       onClick={handleBack}
-                      className="mr-2 text-primary-foreground hover:text-primary-foreground/90"
+                      className="rounded-full w-8 h-8 bg-transparent hover:bg-primary-foreground/20 transition-colors duration-200"
                     >
                       <ArrowLeft className="w-5 h-5" />
-                      <span className="sr-only">Volver</span>
+                      <span className="sr-only  ">Volver</span>
                     </Button>
                   )}
                   Cotizador Legal
@@ -383,7 +383,7 @@ export default function StructuredChatbot() {
                               >
                                 <Button
                                   onClick={() => handleTopicSelect(topic)}
-                                  className="w-full justify-between group hover:bg-primary/90 transition-colors duration-200"
+                                  className="w-full justify-between group hover:bg-primary-foreground/70 transition-colors duration-200"
                                   variant="outline"
                                 >
                                   {topic.text}

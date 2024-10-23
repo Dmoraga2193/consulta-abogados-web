@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardTitle } from "@/components/ui/card";
-import { Mail, Phone, MapPin } from "lucide-react";
+import { Mail, Phone } from "lucide-react";
 import Image from "next/image";
 
 export default function Contacto() {
@@ -107,11 +107,6 @@ export default function Contacto() {
                     icon: Phone,
                     title: "Teléfono",
                     content: "+56 2 2345 6789",
-                  },
-                  {
-                    icon: MapPin,
-                    title: "Dirección",
-                    content: "Av. Libertador Bernardo O'Higgins 1234, Santiago",
                   },
                 ].map((item, index) => (
                   <div key={index} className="flex items-center space-x-4">
