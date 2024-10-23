@@ -1,9 +1,8 @@
 "use client";
 
+import React from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
 
 const footerLinks = [
   { title: "Empresa", links: ["Nosotros", "Trabaja con nosotros", "Blog"] },
@@ -45,7 +44,10 @@ const socialIcons = [
   },
 ];
 
-const FooterLink = ({ href, children }) => (
+const FooterLink: React.FC<{ href: string; children: React.ReactNode }> = ({
+  href,
+  children,
+}) => (
   <Link
     href={href}
     className="text-muted-foreground hover:text-primary transition-colors"

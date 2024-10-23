@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { motion } from "framer-motion";
+import Image from "next/image";
 
 interface FlipCardProps {
   frontText: string;
@@ -32,11 +33,7 @@ const FlipCard: React.FC<FlipCardProps> = ({ frontText, backImage }) => {
         animate={{ opacity: isHovered ? 1 : 0 }}
         transition={{ duration: 0.3 }}
       >
-        <img
-          src={backImage}
-          alt="Back"
-          className="w-full h-full object-cover"
-        />
+        <Image src={backImage} alt="Back" layout="fill" objectFit="cover" />
       </motion.div>
     </motion.div>
   );
