@@ -71,7 +71,7 @@ export default function Header() {
           <div className="flex items-center space-x-3">
             {mounted && (
               <button
-                onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+                onClick={() => setTheme(theme === "light" ? "dark" : "light")}
                 className="w-12 h-6 rounded-full bg-gray-200 dark:bg-gray-600 relative transition-colors duration-500 ease-in focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
               >
                 <div className="flex items-center justify-between p-1">
