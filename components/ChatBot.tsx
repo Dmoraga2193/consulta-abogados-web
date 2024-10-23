@@ -309,21 +309,21 @@ export default function StructuredChatbot() {
             transition={{ duration: 0.3 }}
             className="absolute bottom-0 right-0"
           >
-            <Card className="w-96 h-[32rem] shadow-xl overflow-hidden">
-              <CardHeader className="p-4 bg-primary text-primary-foreground">
-                <CardTitle className="text-lg flex justify-between items-center">
+            <Card className="w-96 h-[32rem] shadow-xl overflow-hidden flex flex-col">
+              <CardHeader className="p-4 bg-primary text-primary-foreground shrink-0">
+                <div className="flex justify-between items-center">
                   {currentStep !== "category" && (
                     <Button
                       variant="ghost"
                       size="icon"
                       onClick={handleBack}
-                      className="mr-2 text-primary-foreground hover:text-primary-foreground/90"
+                      className="rounded-full w-8 h-8 bg-transparent hover:bg-primary-foreground/20 transition-colors duration-200"
                     >
                       <ArrowLeft className="w-5 h-5" />
                       <span className="sr-only">Volver</span>
                     </Button>
                   )}
-                  Cotizador Legal
+                  <CardTitle className="text-lg">Cotizador Legal</CardTitle>
                   <Button
                     variant="ghost"
                     size="icon"
@@ -333,7 +333,7 @@ export default function StructuredChatbot() {
                     <X className="w-5 h-5" />
                     <span className="sr-only">Cerrar chat</span>
                   </Button>
-                </CardTitle>
+                </div>
                 <div className="flex justify-center space-x-2 mt-2">
                   {steps.map((step, index) => (
                     <motion.div
@@ -350,8 +350,8 @@ export default function StructuredChatbot() {
                   ))}
                 </div>
               </CardHeader>
-              <CardContent className="p-0">
-                <ScrollArea className="h-[calc(32rem-8rem)] w-full">
+              <CardContent className="p-0 flex-grow overflow-hidden">
+                <ScrollArea className="h-full w-full">
                   <div className="p-4">
                     <AnimatePresence mode="wait">
                       {currentStep === "category" && (
@@ -399,7 +399,7 @@ export default function StructuredChatbot() {
                               >
                                 <Button
                                   onClick={() => handleTopicSelect(topic)}
-                                  className="w-full justify-between group hover:bg-primary-foreground/70 transition-colors duration-200"
+                                  className="w-full justify-between group hover:bg-primary-foreground/90 transition-colors duration-200"
                                   variant="outline"
                                 >
                                   {topic.text}
@@ -524,7 +524,7 @@ export default function StructuredChatbot() {
                   <div ref={messagesEndRef} />
                 </ScrollArea>
               </CardContent>
-              <CardFooter className="p-4 bg-secondary/50">
+              <CardFooter className="p-4 bg-secondary/50 shrink-0">
                 <p className="text-sm text-muted-foreground text-center w-full">
                   Esta es una cotización estimada. El precio final puede variar
                   según la complejidad del caso.
