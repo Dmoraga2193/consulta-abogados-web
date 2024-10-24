@@ -6,8 +6,16 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { ArrowLeft } from "lucide-react";
+import {
+  ArrowLeft,
+  BarChart2,
+  Briefcase,
+  Clock,
+  DollarSign,
+  FileText,
+} from "lucide-react";
 import { useToastContext } from "@/components/ToastProvider";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 type Topic = {
   id: string;
@@ -189,34 +197,61 @@ export default function CategoryForm({ category, onBack }: CategoryFormProps) {
       )}
       {currentStep === "summary" && (
         <motion.div {...fadeInUp}>
-          <h3 className="text-lg font-semibold mb-4">
-            Resumen de su consulta:
+          <h3 className="text-2xl font-semibold mb-6">
+            Resumen de su consulta
           </h3>
-          <div className="space-y-2 mb-4">
-            <p>
-              <span className="font-medium">Categoría:</span> {category.title}
-            </p>
-            <p>
-              <span className="font-medium">Tema:</span> {selectedTopic?.name}
-            </p>
-          </div>
-          <div className="space-y-2 mb-4">
+          <div className="space-y-6">
+            <div className="flex items-center space-x-4">
+              <div className="bg-primary rounded-full p-2">
+                <Briefcase className="w-6 h-6 text-primary-foreground" />
+              </div>
+              <div>
+                <p className="text-sm text-muted-foreground">Categoría</p>
+                <p className="font-medium">{category.title}</p>
+              </div>
+            </div>
+            <div className="flex items-center space-x-4">
+              <div className="bg-primary rounded-full p-2">
+                <FileText className="w-6 h-6 text-primary-foreground" />
+              </div>
+              <div>
+                <p className="text-sm text-muted-foreground">Tema</p>
+                <p className="font-medium">{selectedTopic?.name}</p>
+              </div>
+            </div>
             {Object.entries(answers).map(([questionId, answer]) => {
               const question = questions.find((q) => q.id === questionId);
               return (
-                <p key={questionId}>
-                  <span className="font-medium">{question?.text}</span> {answer}
-                </p>
+                <div key={questionId} className="flex items-center space-x-4">
+                  <div className="bg-primary rounded-full p-2">
+                    {questionId === "urgency" ? (
+                      <Clock className="w-6 h-6 text-primary-foreground" />
+                    ) : (
+                      <BarChart2 className="w-6 h-6 text-primary-foreground" />
+                    )}
+                  </div>
+                  <div>
+                    <p className="text-sm text-muted-foreground">
+                      {question?.text}
+                    </p>
+                    <p className="font-medium">{answer}</p>
+                  </div>
+                </div>
               );
             })}
-          </div>
-          <div className="mt-4 p-4 bg-primary/10 rounded-lg">
-            <p className="text-lg font-semibold">
-              Precio estimado de la consulta:
-            </p>
-            <p className="text-3xl font-bold text-primary">
-              ${totalPrice.toLocaleString("es-CL")}
-            </p>
+            <div className="flex items-center space-x-4">
+              <div className="bg-primary rounded-full p-2">
+                <DollarSign className="w-6 h-6 text-primary-foreground" />
+              </div>
+              <div>
+                <p className="text-sm text-muted-foreground">
+                  Precio estimado de la consulta
+                </p>
+                <p className="text-2xl font-bold text-primary">
+                  ${totalPrice.toLocaleString("es-CL")}
+                </p>
+              </div>
+            </div>
           </div>
           <Button
             onClick={() => setCurrentStep("confirmation")}
