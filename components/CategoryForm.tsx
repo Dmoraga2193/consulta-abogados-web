@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { ArrowLeft } from "lucide-react";
+import { useToastContext } from "@/components/ToastProvider";
 
 type Topic = {
   id: string;
@@ -27,14 +28,15 @@ type CategoryFormProps = {
 
 export default function CategoryForm({ category, onBack }: CategoryFormProps) {
   const [currentStep, setCurrentStep] = useState<
-    "userInfo" | "topic" | "questions" | "summary"
-  >("userInfo");
+    "topic" | "questions" | "summary" | "confirmation" | "userInfo"
+  >("topic");
   const [userName, setUserName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [selectedTopic, setSelectedTopic] = useState<Topic | null>(null);
   const [answers, setAnswers] = useState<{ [key: string]: string }>({});
   const [totalPrice, setTotalPrice] = useState(0);
+  const { toast } = useToastContext();
 
   const questions = [
     {
@@ -50,17 +52,6 @@ export default function CategoryForm({ category, onBack }: CategoryFormProps) {
       priceImpact: [0, 10000, 20000, 30000],
     },
   ];
-
-  const handleUserInfoSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!email && !phone) {
-      alert(
-        "Por favor, proporcione al menos un método de contacto (correo electrónico o teléfono)."
-      );
-      return;
-    }
-    setCurrentStep("topic");
-  };
 
   const handleTopicSelect = (topic: Topic) => {
     setSelectedTopic(topic);
@@ -79,6 +70,47 @@ export default function CategoryForm({ category, onBack }: CategoryFormProps) {
 
   const handleFinish = () => {
     setCurrentStep("summary");
+  };
+
+  const handleConfirmation = (proceed: boolean) => {
+    if (proceed) {
+      setCurrentStep("userInfo");
+    } else {
+      // Reset the form and go back to the topic selection
+      setSelectedTopic(null);
+      setAnswers({});
+      setTotalPrice(0);
+      setCurrentStep("topic");
+    }
+  };
+
+  const handleUserInfoSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!email && !phone) {
+      toast({
+        title: "Error",
+        description:
+          "Por favor, proporcione al menos un método de contacto (correo electrónico o teléfono).",
+        variant: "destructive",
+      });
+      return;
+    }
+    // Here you would typically send the data to your backend or perform further actions
+    toast({
+      title: "Cotización enviada",
+      description:
+        "Su cotización ha sido enviada a un abogado. Le contactaremos pronto.",
+      duration: 5000,
+    });
+    // Reset form and go back to the main page after submission
+    setUserName("");
+    setEmail("");
+    setPhone("");
+    setSelectedTopic(null);
+    setAnswers({});
+    setTotalPrice(0);
+    setCurrentStep("topic");
+    onBack();
   };
 
   const fadeInUp = {
@@ -100,42 +132,6 @@ export default function CategoryForm({ category, onBack }: CategoryFormProps) {
         <span className="sr-only">Volver</span>
       </Button>
       <h2 className="text-2xl font-bold mb-6">{category.title}</h2>
-      {currentStep === "userInfo" && (
-        <motion.form onSubmit={handleUserInfoSubmit} {...fadeInUp}>
-          <div className="space-y-4">
-            <div>
-              <Label htmlFor="name">Nombre</Label>
-              <Input
-                id="name"
-                value={userName}
-                onChange={(e) => setUserName(e.target.value)}
-                required
-              />
-            </div>
-            <div>
-              <Label htmlFor="email">Correo electrónico (opcional)</Label>
-              <Input
-                id="email"
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-              />
-            </div>
-            <div>
-              <Label htmlFor="phone">Teléfono (opcional)</Label>
-              <Input
-                id="phone"
-                type="tel"
-                value={phone}
-                onChange={(e) => setPhone(e.target.value)}
-              />
-            </div>
-            <Button type="submit" className="w-full">
-              Continuar
-            </Button>
-          </div>
-        </motion.form>
-      )}
       {currentStep === "topic" && (
         <motion.div {...fadeInUp}>
           <h3 className="text-lg font-semibold mb-4">
@@ -198,19 +194,6 @@ export default function CategoryForm({ category, onBack }: CategoryFormProps) {
           </h3>
           <div className="space-y-2 mb-4">
             <p>
-              <span className="font-medium">Nombre:</span> {userName}
-            </p>
-            {email && (
-              <p>
-                <span className="font-medium">Correo electrónico:</span> {email}
-              </p>
-            )}
-            {phone && (
-              <p>
-                <span className="font-medium">Teléfono:</span> {phone}
-              </p>
-            )}
-            <p>
               <span className="font-medium">Categoría:</span> {category.title}
             </p>
             <p>
@@ -235,10 +218,64 @@ export default function CategoryForm({ category, onBack }: CategoryFormProps) {
               ${totalPrice.toLocaleString("es-CL")}
             </p>
           </div>
-          <Button onClick={onBack} className="w-full mt-6">
-            Iniciar nueva cotización
+          <Button
+            onClick={() => setCurrentStep("confirmation")}
+            className="w-full mt-6"
+          >
+            Continuar
           </Button>
         </motion.div>
+      )}
+      {currentStep === "confirmation" && (
+        <motion.div {...fadeInUp} className="text-center">
+          <h3 className="text-lg font-semibold mb-4">
+            ¿Desea proseguir con la cotización y derivarlo al abogado?
+          </h3>
+          <div className="space-x-4">
+            <Button onClick={() => handleConfirmation(true)} variant="default">
+              Sí, continuar
+            </Button>
+            <Button onClick={() => handleConfirmation(false)} variant="outline">
+              No, volver al inicio
+            </Button>
+          </div>
+        </motion.div>
+      )}
+      {currentStep === "userInfo" && (
+        <motion.form onSubmit={handleUserInfoSubmit} {...fadeInUp}>
+          <div className="space-y-4">
+            <div>
+              <Label htmlFor="name">Nombre</Label>
+              <Input
+                id="name"
+                value={userName}
+                onChange={(e) => setUserName(e.target.value)}
+                required
+              />
+            </div>
+            <div>
+              <Label htmlFor="email">Correo electrónico (opcional)</Label>
+              <Input
+                id="email"
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
+            </div>
+            <div>
+              <Label htmlFor="phone">Teléfono (opcional)</Label>
+              <Input
+                id="phone"
+                type="tel"
+                value={phone}
+                onChange={(e) => setPhone(e.target.value)}
+              />
+            </div>
+            <Button type="submit" className="w-full">
+              Enviar cotización
+            </Button>
+          </div>
+        </motion.form>
       )}
     </motion.div>
   );

@@ -4,6 +4,8 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import Chatbot from "@/components/ChatBot";
+import { Toaster } from "@/components/ui/toaster";
+import { ToastProvider } from "@/components/ToastProvider";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -26,12 +28,15 @@ export default function RootLayout({
           enableSystem={false}
           disableTransitionOnChange
         >
-          <div className="flex flex-col min-h-screen">
-            <Header />
-            {children}
-            <Chatbot />
-            <Footer />
-          </div>
+          <ToastProvider>
+            <div className="flex flex-col min-h-screen">
+              <Header />
+              {children}
+              <Chatbot />
+              <Footer />
+            </div>
+            <Toaster />
+          </ToastProvider>
         </ThemeProvider>
       </body>
     </html>
