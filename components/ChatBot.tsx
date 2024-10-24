@@ -19,6 +19,7 @@ import {
 } from "@/components/ui/accordion";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
 import { ChevronRight, MessageCircle, X, ArrowLeft } from "lucide-react";
 
 type ChatItem = {
@@ -202,11 +203,11 @@ const categories: Category[] = [
   },
 ];
 
-export default function StructuredChatbot() {
+export default function Component() {
   const [isOpen, setIsOpen] = useState(false);
   const [currentStep, setCurrentStep] = useState<
-    "category" | "topic" | "question" | "summary"
-  >("category");
+    "userInfo" | "category" | "topic" | "question" | "summary"
+  >("userInfo");
   const [selectedCategory, setSelectedCategory] = useState<Category | null>(
     null
   );
@@ -215,15 +216,23 @@ export default function StructuredChatbot() {
     [key: string]: string;
   }>({});
   const [totalPrice, setTotalPrice] = useState(0);
+  const [userName, setUserName] = useState("");
+  const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
+  const [contactError, setContactError] = useState("");
   const messagesEndRef = useRef<HTMLDivElement>(null);
-  const steps = ["category", "topic", "question", "summary"];
+  const steps = ["userInfo", "category", "topic", "question", "summary"];
 
   const resetChat = () => {
-    setCurrentStep("category");
+    setCurrentStep("userInfo");
     setSelectedCategory(null);
     setSelectedTopic(null);
     setSelectedAnswers({});
     setTotalPrice(0);
+    setUserName("");
+    setEmail("");
+    setPhone("");
+    setContactError("");
   };
 
   const fadeInUp = {
@@ -231,6 +240,18 @@ export default function StructuredChatbot() {
     animate: { opacity: 1, y: 0 },
     exit: { opacity: 0, y: -20 },
     transition: { duration: 0.3 },
+  };
+
+  const handleUserInfoSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!email && !phone) {
+      setContactError(
+        "Por favor, proporcione al menos un método de contacto (correo electrónico o teléfono)."
+      );
+      return;
+    }
+    setContactError("");
+    setCurrentStep("category");
   };
 
   const handleCategorySelect = (category: Category) => {
@@ -259,6 +280,9 @@ export default function StructuredChatbot() {
 
   const handleBack = () => {
     switch (currentStep) {
+      case "category":
+        setCurrentStep("userInfo");
+        break;
       case "topic":
         setCurrentStep("category");
         setSelectedCategory(null);
@@ -312,7 +336,7 @@ export default function StructuredChatbot() {
             <Card className="w-96 h-[32rem] shadow-xl overflow-hidden flex flex-col">
               <CardHeader className="p-4 bg-primary text-primary-foreground shrink-0">
                 <div className="flex justify-between items-center">
-                  {currentStep !== "category" && (
+                  {currentStep !== "userInfo" && (
                     <Button
                       variant="ghost"
                       size="icon"
@@ -354,6 +378,56 @@ export default function StructuredChatbot() {
                 <ScrollArea className="h-full w-full">
                   <div className="p-4">
                     <AnimatePresence mode="wait">
+                      {currentStep === "userInfo" && (
+                        <motion.div key="userInfo" {...fadeInUp}>
+                          <h3 className="text-lg font-semibold mb-4">
+                            Por favor, ingrese sus datos de contacto:
+                          </h3>
+                          <form onSubmit={handleUserInfoSubmit}>
+                            <div className="space-y-4">
+                              <div>
+                                <Label htmlFor="name">Nombre</Label>
+                                <Input
+                                  id="name"
+                                  value={userName}
+                                  onChange={(e) => setUserName(e.target.value)}
+                                  required
+                                />
+                              </div>
+                              <div>
+                                <Label htmlFor="email">
+                                  Correo electrónico (opcional)
+                                </Label>
+                                <Input
+                                  id="email"
+                                  type="email"
+                                  value={email}
+                                  onChange={(e) => setEmail(e.target.value)}
+                                />
+                              </div>
+                              <div>
+                                <Label htmlFor="phone">
+                                  Teléfono (opcional)
+                                </Label>
+                                <Input
+                                  id="phone"
+                                  type="tel"
+                                  value={phone}
+                                  onChange={(e) => setPhone(e.target.value)}
+                                />
+                              </div>
+                              {contactError && (
+                                <p className="text-sm  text-red-500">
+                                  {contactError}
+                                </p>
+                              )}
+                              <Button type="submit" className="w-full">
+                                Continuar
+                              </Button>
+                            </div>
+                          </form>
+                        </motion.div>
+                      )}
                       {currentStep === "category" && (
                         <motion.div key="category" {...fadeInUp}>
                           <h3 className="text-lg font-semibold mb-4">
@@ -466,6 +540,24 @@ export default function StructuredChatbot() {
                             Resumen de su consulta:
                           </h3>
                           <div className="space-y-2 mb-4">
+                            <p>
+                              <span className="font-medium">Nombre:</span>{" "}
+                              {userName}
+                            </p>
+                            {email && (
+                              <p>
+                                <span className="font-medium">
+                                  Correo electrónico:
+                                </span>{" "}
+                                {email}
+                              </p>
+                            )}
+                            {phone && (
+                              <p>
+                                <span className="font-medium">Teléfono:</span>{" "}
+                                {phone}
+                              </p>
+                            )}
                             <p>
                               <span className="font-medium">Área:</span>{" "}
                               {selectedCategory?.text}
