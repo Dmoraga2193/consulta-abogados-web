@@ -6,7 +6,21 @@ import { motion } from "framer-motion";
 import { useState } from "react";
 import CategoryForm from "./CategoryForm";
 
-const categories = [
+type Topic = {
+  id: string;
+  name: string;
+  basePrice: number;
+};
+
+type Category = {
+  id: string;
+  title: string;
+  image: string;
+  description: string;
+  topics: Topic[];
+};
+
+const categories: Category[] = [
   {
     id: "civil",
     title: "Derecho Civil",
@@ -47,7 +61,9 @@ const categories = [
 ];
 
 export default function ServiciosDestacados() {
-  const [selectedCategory, setSelectedCategory] = useState(null);
+  const [selectedCategory, setSelectedCategory] = useState<Category | null>(
+    null
+  );
 
   return (
     <section className="py-20 bg-background" id="servicios">
