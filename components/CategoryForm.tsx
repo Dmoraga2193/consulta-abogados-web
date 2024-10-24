@@ -134,7 +134,12 @@ export default function CategoryForm({ category, onBack }: CategoryFormProps) {
       animate={{ opacity: 1, scale: 1 }}
       transition={{ duration: 0.5 }}
     >
-      <Button variant="ghost" size="icon" onClick={onBack} className="mb-4">
+      <Button
+        variant="ghost"
+        size="icon"
+        onClick={onBack}
+        className="rounded-full w-8 h-8 bg-transparent hover:bg-primary-foreground/20 transition-colors duration-200 mb-4"
+      >
         <ArrowLeft className="w-5 h-5" />
         <span className="sr-only">Volver</span>
       </Button>
