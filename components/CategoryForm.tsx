@@ -15,7 +15,6 @@ import {
   FileText,
 } from "lucide-react";
 import { useToastContext } from "@/components/ToastProvider";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 type Topic = {
   id: string;
